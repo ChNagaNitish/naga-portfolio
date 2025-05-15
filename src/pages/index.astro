@@ -1,0 +1,64 @@
+---
+// Component Script (JavaScript/TypeScript runs at build time)
+import BaseLayout from '../layouts/BaseLayout.astro';
+const myName = "Naga Nitish Chamala"; // Replace with your name
+const shortIntro = "Highly motivated researcher with expertise in CFD, multiphase flows, and thermal analysis, demonstrated through advanced numerical simulations, model development, and experimental validation. Proficient in industry-standard software (ANSYS Fluent/CFX/Icepak, OpenFOAM, StarCCM+) and programming languages (C++, Python). Proven ability to optimize designs and improve performance in complex fluid and thermal systems.";
+---
+<BaseLayout title="Welcome">
+    <div class="intro-section">
+        <div class="intro-text">
+            <h1>Hello, I'm {myName}!</h1>
+            <p>{shortIntro}</p>
+        </div>
+        <div class="intro-image-container">
+            <img 
+                src="/images/naga_photo.jpg"
+                alt="A picture of {myName}" 
+                class="profile-picture" 
+            />
+        </div>
+    </div>
+
+    {/* Add other sections of your homepage here */}
+
+    <style>
+        /* Scoped styles for this page */
+        .intro-section {
+            display: flex; /* Example: for side-by-side layout */
+            align-items: center;
+            gap: 2rem; /* Space between text and image */
+            flex-wrap: wrap; /* Allow wrapping on smaller screens */
+            margin-bottom: 2rem;
+        }
+
+        .intro-text {
+            flex: 2; /* Text takes more space */
+            min-width: 250px; /* Ensure text has some minimum width */
+        }
+
+        .intro-image-container {
+            flex: 1; /* Image container takes less space */
+            display: flex;
+            justify-content: center; /* Center image if container is wider */
+            min-width: 200px;
+        }
+
+        .profile-picture {
+            width: 200px; /* Adjust size as needed */
+            height: 200px; /* Adjust size as needed */
+            object-fit: cover; /* Ensures the image covers the area without distortion */
+            border-radius: 50%; /* Makes the image circular */
+            border: 3px solid #fff; /* Optional: adds a white border */
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Optional: adds a subtle shadow */
+            
+            /* Animation properties */
+            transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out; 
+            /* Smooth transition for transform and shadow */
+        }
+
+        .profile-picture:hover {
+            transform: scale(1.1); /* Makes the image 10% larger */
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* Enhance shadow on hover */
+        }
+    </style>
+</BaseLayout>

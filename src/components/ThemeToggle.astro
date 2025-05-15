@@ -1,0 +1,104 @@
+---
+// src/components/ThemeToggle.astro
+const themes = ['system', 'light', 'dark'] as const;
+type Theme = typeof themes[number];
+---
+
+<div class="theme-toggle-container">
+  <button id="themeToggleBtn" aria-label="Toggle theme">
+    Loading...
+  </button>
+</div>
+
+<script is:inline>
+  // This script runs immediately to prevent FOUC (Flash of Unstyled Content)
+  // and sets the theme based on localStorage or system preference.
+  const themes = ['system', 'light', 'dark'];
+  let currentThemeIndex = 0; // Default to 'system' if nothing else is set
+
+  const applyTheme = (theme) => {
+    if (theme === 'system') {
+      document.documentElement.classList.toggle('dark', window.matchMedia('(prefers-color-scheme: dark)').matches);
+    } else {
+      document.documentElement.classList.toggle('dark', theme === 'dark');
+    }
+  };
+
+  const updateButtonText = (theme) => {
+    const button = document.getElementById('themeToggleBtn');
+    if (button) {
+      let icon = '🌓'; // System
+      if (theme === 'light') icon = '☀️'; // Light
+      if (theme === 'dark') icon = '🌙'; // Dark
+      button.textContent = `${icon} ${theme.charAt(0).toUpperCase() + theme.slice(1)}`;
+    }
+  };
+  
+  // Initialize theme on first load
+  let storedTheme = localStorage.getItem('theme-preference');
+  if (storedTheme && themes.includes(storedTheme)) {
+    applyTheme(storedTheme);
+    currentThemeIndex = themes.indexOf(storedTheme);
+    updateButtonText(storedTheme);
+  } else {
+    // Default to system if no preference or invalid preference stored
+    storedTheme = 'system'; 
+    localStorage.setItem('theme-preference', 'system'); // Store 'system' as the initial choice
+    applyTheme('system');
+    currentThemeIndex = themes.indexOf('system');
+    updateButtonText('system');
+  }
+
+  // Function to be called by the button click (defined after DOM content loaded or directly)
+  // This needs to be available globally or attached specifically after the button exists.
+  // For simplicity with is:inline, we'll re-select the button and add listener after DOM is ready.
+  document.addEventListener('DOMContentLoaded', () => {
+    const toggleButton = document.getElementById('themeToggleBtn');
+    
+    // Initial button text update if not already done (e.g. for faster paint)
+    if (toggleButton.textContent === 'Loading...') {
+        const initialTheme = localStorage.getItem('theme-preference') || 'system';
+        updateButtonText(initialTheme);
+    }
+
+    if (toggleButton) {
+      toggleButton.addEventListener('click', () => {
+        currentThemeIndex = (currentThemeIndex + 1) % themes.length;
+        const newTheme = themes[currentThemeIndex];
+        localStorage.setItem('theme-preference', newTheme);
+        applyTheme(newTheme);
+        updateButtonText(newTheme);
+      });
+    }
+  });
+
+  // Listen for changes in system preference if current theme is 'system'
+  // This ensures the theme updates if the OS theme changes and user has selected 'system'
+  window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', (e) => {
+    const currentStoredTheme = localStorage.getItem('theme-preference');
+    if (currentStoredTheme === 'system') {
+      applyTheme('system');
+      // No need to update button text here as it should still say "System"
+    }
+  });
+</script>
+
+<style>
+  .theme-toggle-container {
+    /* Style to position it, e.g., in the header */
+  }
+  #themeToggleBtn {
+    padding: 0.5rem 0.8rem;
+    border: 1px solid var(--border-color);
+    background-color: var(--secondary-bg-color);
+    color: var(--text-color);
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    min-width: 100px; /* To prevent layout shift as text changes */
+    text-align: center;
+  }
+  #themeToggleBtn:hover {
+    border-color: var(--accent-color);
+  }
+</style>

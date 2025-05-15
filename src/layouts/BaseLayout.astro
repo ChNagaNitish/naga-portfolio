@@ -1,0 +1,116 @@
+---
+// src/layouts/BaseLayout.astro
+import '../styles/global.css'; // Import global styles
+import ThemeToggle from '../components/ThemeToggle.astro'; // Import the theme toggle component
+
+export interface Props {
+    title: string;
+    description?: string;
+}
+
+const { title, description = "ChNagaNitish - Personal Portfolio" } = Astro.props;
+const siteName = "ChNagaNitish";
+
+// Define your navigation links here for easier management
+const navLinks = [
+  { href: "/", label: "Home" },
+  { href: "/resume/", label: "Resume" },
+  { href: "/portfolio/", label: "Portfolio" },
+  // Add more links as your site grows
+  // { href: "/contact/", label: "Contact" },
+];
+
+const currentPath = Astro.url.pathname; // Gets the current page's path, e.g., "/", "/resume/", "/portfolio/project-name/"
+---
+<!doctype html>
+<html lang="en"> {/* The .dark class will be added/removed here by ThemeToggle.astro script */}
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="generator" content={Astro.generator} />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    
+    <title>{title} | {siteName}</title>
+    <meta name="description" content={description} />
+
+    {/* Open Graph / Social Media Meta Tags (Optional) */}
+    <meta property="og:title" content={`${title} | ${siteName}`} />
+    <meta property="og:description" content={description} />
+</head>
+<body>
+    <header>
+        <nav>
+            {navLinks.map(link => {
+                let isActive = false;
+                if (link.href === "/") {
+                    // Home is active only if the current path is exactly "/"
+                    isActive = currentPath === "/";
+                } else {
+                    // For other links (e.g., "/resume/", "/portfolio/"),
+                    // it's active if the current path starts with the link's href.
+                    // This makes "/portfolio/" active for both "/portfolio/" and "/portfolio/project-slug/".
+                    // Ensure consistent trailing slashes for comparison if your links always end with one.
+                    const linkHrefWithTrailingSlash = link.href.endsWith('/') ? link.href : link.href + '/';
+                    const currentPathWithTrailingSlashIfNeeded = currentPath.endsWith('/') || currentPath === "/" ? currentPath : currentPath + '/';
+                    
+                    if (link.href === "/") { // Re-check for home for exact match
+                        isActive = currentPathWithTrailingSlashIfNeeded === linkHrefWithTrailingSlash;
+                    } else {
+                        isActive = currentPathWithTrailingSlashIfNeeded.startsWith(linkHrefWithTrailingSlash);
+                    }
+                }
+                return (
+                    <a 
+                        href={link.href} 
+                        class:list={[{ active: isActive }, "nav-link"]}
+                        aria-current={isActive ? "page" : false} {/* Important for accessibility */}
+                    >
+                        {link.label}
+                    </a>
+                );
+            })}
+        </nav>
+        <ThemeToggle /> {/* Place the theme toggle component */}
+    </header>
+
+    <main>
+        <slot /> {/* Page content will be injected here */}
+    </main>
+
+    <footer>
+        <p>&copy; {new Date().getFullYear()} {siteName}. All rights reserved.</p>
+    </footer>
+
+    {/* Styles for the active navigation link can go here or in global.css */}
+    <style>
+        header nav a.nav-link {
+            padding: 0.5rem 0; /* Add some padding for the ::after element */
+            position: relative; /* Needed for the ::after pseudo-element */
+            text-decoration: none;
+            color: var(--text-color); /* Ensure it uses themed text color */
+            transition: color 0.2s ease-in-out;
+        }
+
+        header nav a.nav-link:hover {
+            color: var(--accent-color);
+        }
+
+        header nav a.nav-link.active {
+            color: var(--accent-color);
+            font-weight: 600; /* Make active link bolder */
+        }
+
+        /* Underline effect for active link */
+        header nav a.nav-link.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px; /* Position the underline just below the text */
+            left: 0;
+            width: 100%;
+            height: 2px; /* Thickness of the underline */
+            background-color: var(--accent-color);
+            border-radius: 1px; /* Slightly rounded ends for the underline */
+        }
+    </style>
+</body>
+</html>

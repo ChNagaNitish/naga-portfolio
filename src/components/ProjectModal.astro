@@ -1,0 +1,230 @@
+---
+// src/components/ProjectModal.astro
+---
+<div id="projectModal" class="modal-overlay" aria-hidden="true" role="dialog" aria-modal="true">
+  <div class="modal-container">
+    <button id="modalCloseBtn" class="modal-close-btn" aria-label="Close project details">
+      &times; {/* A simple 'X' icon */}
+    </button>
+    <div id="modalContent" class="modal-content">
+      <p>Loading project...</p>
+    </div>
+  </div>
+</div>
+
+<script>
+  // Get modal elements
+  const modal = document.getElementById('projectModal');
+  const modalContent = document.getElementById('modalContent');
+  const closeBtn = document.getElementById('modalCloseBtn');
+  let lastFocusedElement = null; // To return focus after closing
+
+  function openModal() {
+    lastFocusedElement = document.activeElement; // Save current focus
+    modal.setAttribute('aria-hidden', 'false');
+    modal.style.display = 'flex'; // Show the modal
+    document.body.style.overflow = 'hidden'; // Prevent background scrolling
+    // Optional: Focus the close button or the modal container for accessibility
+    closeBtn.focus(); 
+  }
+
+  function closeModal() {
+    modal.setAttribute('aria-hidden', 'true');
+    modal.style.display = 'none'; // Hide the modal
+    document.body.style.overflow = ''; // Restore background scrolling
+    modalContent.innerHTML = '<p>Loading project...</p>'; // Reset content
+    if (lastFocusedElement) {
+      lastFocusedElement.focus(); // Return focus to where it was
+    }
+  }
+
+  // Close modal when close button is clicked
+  closeBtn.addEventListener('click', closeModal);
+
+  // Close modal when clicking outside the modal content (on the overlay)
+  modal.addEventListener('click', (event) => {
+    if (event.target === modal) { // Check if the click is on the overlay itself
+      closeModal();
+    }
+  });
+
+  // Close modal when Esc key is pressed
+  document.addEventListener('keydown', (event) => {
+    if (event.key === 'Escape' && modal.style.display === 'flex') {
+      closeModal();
+    }
+  });
+
+  // Global function to open modal and load content (can be called from other scripts/components)
+  window.openProjectModal = async (projectUrl) => {
+    openModal();
+    try {
+      const response = await fetch(projectUrl);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
+      }
+      const htmlText = await response.text();
+      const parser = new DOMParser();
+      const doc = parser.parseFromString(htmlText, 'text/html');
+      
+      // Assume your main project detail content is within an <article class="project-detail">
+      // Adjust this selector if your project detail page has a different main content wrapper
+      const projectDetailElement = doc.querySelector('article.project-detail'); 
+      
+      if (projectDetailElement) {
+        modalContent.innerHTML = ''; // Clear "Loading..."
+        modalContent.appendChild(projectDetailElement.cloneNode(true)); // Append the content
+      } else {
+        modalContent.innerHTML = '<p>Sorry, content could not be loaded.</p>';
+        console.error("Could not find '.project-detail' in fetched HTML from:", projectUrl);
+      }
+    } catch (error) {
+      console.error('Failed to load project content:', error);
+      modalContent.innerHTML = '<p>Error loading project. Please try again later.</p>';
+    }
+  };
+
+  // Expose closeModal globally if needed, though usually managed internally
+  window.closeProjectModal = closeModal; 
+</script>
+
+<style>
+  .modal-overlay {
+    display: none; /* Hidden by default */
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7); /* Semi-transparent background */
+    justify-content: center;
+    align-items: center;
+    z-index: 10000; /* Ensure it's on top */
+    backdrop-filter: blur(5px); /* Optional: blur background */
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+  }
+
+  /* When modal is shown (JS will change display to flex, then we can trigger opacity) */
+  .modal-overlay[style*="display: flex"] {
+    opacity: 1;
+  }
+
+  .modal-container {
+    background-color: var(--bg-color); /* Use themed background */
+    color: var(--text-color); /* Use themed text color */
+    padding: 20px; /* Inner padding */
+    border-radius: 12px;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+    width: 90%; /* Occupies most of the width */
+    max-width: 900px; /* But not too wide on large screens */
+    height: 85vh; /* Occupies most of the height */
+    max-height: 85vh;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    transform: scale(0.95);
+    transition: transform 0.3s ease-in-out;
+  }
+  
+  .modal-overlay[style*="display: flex"] .modal-container {
+      transform: scale(1);
+  }
+
+
+  .modal-close-btn {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 2rem; /* Make 'X' larger */
+    color: var(--secondary-text-color);
+    cursor: pointer;
+    line-height: 1;
+    padding: 0.25rem 0.5rem;
+    z-index: 10; /* Above content */
+    transition: color 0.2s ease;
+  }
+
+  .modal-close-btn:hover {
+    color: var(--accent-color);
+  }
+
+  .modal-content {
+    overflow-y: auto; /* Make content area scrollable */
+    padding-right: 15px; /* Space for scrollbar if it appears, adjust as needed */
+    flex-grow: 1; /* Takes up available space */
+    /* Styling for content fetched from project detail page */
+    /* You might need to adjust these selectors if they are different from your [slug].astro styles */
+  }
+  
+  /* Basic styles for content within the modal - mirror your [slug].astro styles or ensure they are inherited globally */
+  .modal-content :global(article.project-detail) {
+      max-width: 100%; /* Override max-width from the original page if any */
+      padding: 1rem; /* Add some padding inside the scrollable area */
+  }
+  .modal-content :global(article.project-detail h1) {
+    font-size: 2rem;
+    margin-top: 0; /* Remove top margin for first heading in modal */
+    color: var(--text-color);
+  }
+   .modal-content :global(article.project-detail .publish-date) {
+    font-size: 0.85rem;
+    color: var(--secondary-text-color);
+    margin-bottom: 1rem;
+  }
+  .modal-content :global(article.project-detail .tags) {
+    margin-bottom: 1.5rem;
+  }
+  .modal-content :global(article.project-detail .tag-detail) {
+    display: inline-block;
+    background-color: var(--secondary-bg-color);
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+    padding: 0.25rem 0.6rem;
+    border-radius: 16px;
+    font-size: 0.75rem;
+    margin-right: 0.4rem;
+    margin-bottom: 0.4rem;
+  }
+  html.dark .modal-content :global(article.project-detail .tag-detail) {
+    background-color: color-mix(in srgb, var(--bg-color) 80%, var(--accent-color));
+  }
+  .modal-content :global(article.project-detail .project-cover-image) {
+      margin-bottom: 1.5rem;
+      border-radius: 6px;
+      overflow: hidden;
+  }
+  .modal-content :global(article.project-detail .project-cover-image img) {
+      width: 100%;
+      display: block;
+  }
+  .modal-content :global(article.project-detail .project-meta-links) {
+      margin-bottom: 1.5rem;
+  }
+  .modal-content :global(article.project-detail .external-links) {
+      margin-top: 1rem;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.75rem;
+  }
+  .modal-content :global(article.project-detail .button) {
+      /* Ensure button styles from global.css or ProjectCard apply, or redefine here */
+  }
+  .modal-content :global(article.project-detail .project-content) {
+      line-height: 1.7;
+  }
+  .modal-content :global(article.project-detail .project-content h2) {
+      font-size: 1.6rem; margin-top: 2rem; margin-bottom: 0.75rem;
+  }
+  .modal-content :global(article.project-detail .project-content h3) {
+      font-size: 1.3rem; margin-top: 1.5rem; margin-bottom: 0.5rem;
+  }
+   .modal-content :global(article.project-detail .project-content img) {
+    max-width: 100%;
+    height: auto;
+    border-radius: 4px;
+    margin: 1rem 0;
+  }
+</style>

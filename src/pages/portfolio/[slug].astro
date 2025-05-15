@@ -1,0 +1,287 @@
+---
+// src/pages/portfolio/[slug].astro
+import { getCollection, getEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro'; // Adjust path if your layout is elsewhere
+import { Image } from 'astro:assets'; // If you want to use Astro's Image component for the cover
+
+// 1. getStaticPaths: Tell Astro which pages to build
+export async function getStaticPaths() {
+  const portfolioEntries = await getCollection('portfolio'); // Get all your project entries
+  return portfolioEntries.map(entry => ({
+    params: { slug: entry.slug }, // The 'slug' from your markdown filename
+    props: { project: entry },    // Pass the full entry data as a prop to the page
+  }));
+}
+
+// 2. Get the specific project data for this page
+const { project } = Astro.props;
+const { Content } = await project.render(); // Get the component to render the Markdown body
+
+// For structured data and easier access to frontmatter:
+const { title, description, publishDate, coverImage, tags, client, role, liveLink, repoLink, videoLink, slides } = project.data;
+
+const formattedDate = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long', day: 'numeric' }).format(publishDate);
+---
+
+<BaseLayout title={title} description={description}>
+  <article class="project-detail">
+    <header class="project-header">
+      <h1>{title}</h1>
+      <p class="publish-date"><time datetime={publishDate.toISOString()}>{formattedDate}</time></p>
+      {tags && tags.length > 0 && (
+        <div class="tags">
+          {tags.map(tag => <span class="tag-detail">{tag}</span>)}
+        </div>
+      )}
+    </header>
+
+    {coverImage && coverImage.url && (
+      <div class="project-cover-image">
+        <img src={coverImage.url} alt={coverImage.alt || `Cover image for ${title}`} loading="lazy" />
+        {/* If using Astro Image and images are in src/assets, you might do:
+        <Image 
+            src={import(`../../../assets/portfolio-images/${coverImage.url}`)} 
+            alt={coverImage.alt || `Cover image for ${title}`} 
+            widths={[400, 800, 1200]} 
+            sizes="(max-width: 800px) 100vw, 800px" 
+            format="webp"
+        /> 
+        Adjust the import path based on your actual assets folder structure.
+        The coverImage.url in your frontmatter would need to be just the filename for this import to work easily.
+        */}
+      </div>
+    )}
+
+    <div class="project-meta-links">
+      {client && <p><strong>Client:</strong> {client}</p>}
+      {role && <p><strong>My Role:</strong> {role}</p>}
+      <div class="external-links">
+        {liveLink && <a href={liveLink} target="_blank" rel="noopener noreferrer" class="button">View Live Site</a>}
+        {repoLink && <a href={repoLink} target="_blank" rel="noopener noreferrer" class="button secondary">View Repository</a>}
+        {videoLink && <a href={videoLink} target="_blank" rel="noopener noreferrer" class="button secondary">Watch Demo Video</a>}
+      </div>
+    </div>
+
+    <div class="project-content">
+      <Content /> {/* This renders the main Markdown body of your project file */}
+    </div>
+
+    {/* Slides Section - Rendered by looping */}
+    {slides && slides.length > 0 && (
+      <section class="project-slides-section">
+        <h2>Presentation Slides / Key Visuals</h2>
+        <div class="slides-gallery">
+          {slides.map((slide, index) => (
+            <figure class="slide-item">
+              <img src={slide.url} alt={slide.alt || `${title} - Slide ${index + 1}`} loading="lazy" />
+              {slide.caption && <figcaption>{slide.caption}</figcaption>}
+            </figure>
+          ))}
+        </div>
+      </section>
+    )}
+
+  </article>
+</BaseLayout>
+
+<style>
+  .project-detail {
+    max-width: 800px; /* Or your preferred width for content pages */
+    margin: 0 auto 2rem auto;
+  }
+
+  .project-header {
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+
+  .project-header h1 {
+    font-size: 2.5rem; /* Adjust as needed */
+    margin-bottom: 0.25rem;
+    color: var(--text-color);
+  }
+
+  .publish-date {
+    font-size: 0.9rem;
+    color: var(--secondary-text-color);
+    margin-bottom: 1rem;
+  }
+
+  .tags {
+    margin-bottom: 1rem;
+  }
+
+  .tag-detail {
+    display: inline-block;
+    background-color: var(--secondary-bg-color);
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+    padding: 0.3rem 0.7rem;
+    border-radius: 16px;
+    font-size: 0.8rem;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+  }
+  html.dark .tag-detail {
+    background-color: color-mix(in srgb, var(--bg-color) 80%, var(--accent-color));
+  }
+
+  .project-cover-image {
+    margin-bottom: 2rem;
+    border-radius: 8px;
+    overflow: hidden; /* To contain image if it has its own radius or for box shadow */
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  }
+  html.dark .project-cover-image {
+     box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+  }
+
+  .project-cover-image img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+  
+  .project-meta-links {
+    margin-bottom: 2rem;
+    padding: 1rem;
+    background-color: var(--secondary-bg-color);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
+  }
+  .project-meta-links p {
+    margin: 0 0 0.5rem 0;
+  }
+  .project-meta-links strong {
+    color: var(--text-color);
+  }
+
+  .external-links {
+    margin-top: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+  }
+
+  .button, .button.secondary { /* Reusing styles from ProjectCard or define globally */
+    display: inline-block;
+    padding: 0.6rem 1.2rem;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    font-weight: 500;
+    text-align: center;
+    transition: background-color 0.2s ease-out, border-color 0.2s ease-out, color 0.2s ease-out;
+  }
+
+  .button {
+    background-color: var(--accent-color);
+    color: #fff;
+    border: 1px solid var(--accent-color);
+  }
+  .button:hover {
+    background-color: var(--link-hover-color);
+    border-color: var(--link-hover-color);
+    color: #fff;
+  }
+  .button.secondary {
+    background-color: transparent;
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+  }
+  .button.secondary:hover {
+    background-color: color-mix(in srgb, var(--accent-color) 15%, transparent);
+  }
+
+  .project-content {
+    line-height: 1.7; /* Improve readability for longer content */
+    font-size: 1.05rem; /* Slightly larger for article content */
+  }
+
+  .project-slides-section {
+    margin-top: 3rem;
+    padding-top: 2rem;
+    border-top: 1px solid var(--border-color);
+  }
+
+  .project-slides-section h2 {
+    font-size: 1.75rem; /* Or your preferred size for this section title */
+    margin-bottom: 1.5rem;
+  }
+
+  .slides-gallery {
+    display: grid;
+    /* For a vertical stack of larger images: */
+    /* grid-template-columns: 1fr; */ 
+    /* For a responsive grid of thumbnails (adjust minmax as needed): */
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .slide-item {
+    margin: 0;
+    border: 1px solid var(--border-color);
+    padding: 0.75rem;
+    border-radius: 8px;
+    background-color: var(--secondary-bg-color); /* Optional: slight bg for each slide container */
+    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+  }
+  html.dark .slide-item {
+    box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+  }
+
+  .slide-item img {
+    width: 100%;
+    height: auto;
+    border-radius: 4px; /* If you want rounded corners on the images themselves */
+    margin-bottom: 0.5rem; /* Space between image and caption */
+  }
+
+  .slide-item figcaption {
+    font-size: 0.85rem;
+    text-align: center;
+    color: var(--secondary-text-color);
+    padding-top: 0.5rem;
+  }
+
+  /* Style the HTML elements rendered from your Markdown content */
+  .project-content h2 {
+    font-size: 1.75rem;
+    margin-top: 2.5rem;
+    margin-bottom: 1rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--border-color);
+  }
+  .project-content h3 {
+    font-size: 1.4rem;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
+  .project-content p {
+    margin-bottom: 1.25rem;
+  }
+  .project-content ul, .project-content ol {
+    margin-bottom: 1.25rem;
+    padding-left: 1.5rem;
+  }
+  .project-content li {
+    margin-bottom: 0.5rem;
+  }
+  .project-content blockquote {
+    margin-left: 0;
+    padding-left: 1.5rem;
+    border-left: 4px solid var(--accent-color);
+    font-style: italic;
+    color: var(--secondary-text-color);
+  }
+  .project-content img { /* Images within the markdown content */
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+    border-radius: 6px;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+  }
+  html.dark .project-content img {
+    box-shadow: 0 2px 8px rgba(0,0,0,0.25);
+  }
+</style>

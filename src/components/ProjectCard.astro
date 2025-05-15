@@ -1,0 +1,224 @@
+---
+// src/components/ProjectCard.astro
+import { Image } from 'astro:assets'; // Using Astro's Image component for optimization
+
+export interface Props {
+  slug: string; // Automatically provided by getCollection for linking
+  title: string;
+  description: string;
+  coverImage: {
+    url: string; // This will be the path within src/assets if using Astro assets, or public if not
+    alt: string;
+  };
+  tags?: string[];
+  liveLink?: string;
+  repoLink?: string;
+  videoLink?: string;
+  publishDate: Date;
+}
+
+const { slug, title, description, coverImage, tags, liveLink, repoLink, videoLink, publishDate } = Astro.props;
+
+// Helper to format the date
+const formattedDate = new Intl.DateTimeFormat('en-US', { year: 'numeric', month: 'long' }).format(publishDate);
+const projectDetailUrl = `/portfolio/${slug}/`; 
+
+// Path to images if you store them in src/assets/portfolio-images/
+// and your coverImage.url is just the filename like 'project-a.jpg'
+// const imagePath = `/src/assets/portfolio-images/${coverImage.url}`; 
+// For this example, we'll assume coverImage.url is a direct path like when using public folder 
+// or already a resolved path if you handle that in the MD frontmatter.
+// If coverImage.url is `/images/portfolio/project-name/cover.jpg` (from public), 
+// then standard <img> tag is simpler unless you want Astro's <Image> processing.
+// Let's assume for <Image/> component, the URL needs to be imported or a relative path from src/assets
+// For simplicity NOW with your existing MD, let's assume coverImage.url is a public path.
+// IF you move images to src/assets/ for Astro's <Image> component to process, you'd need to import them.
+// For now, we'll use a standard <img> tag assuming images are in `public`
+// To use Astro <Image>, you would change how coverImage.url is structured or imported.
+---
+<article class="project-card" 
+         onclick={`window.openProjectModal('${projectDetailUrl}')`} 
+         onkeypress={(e) => { if (e.key === 'Enter' || e.key === ' ') window.openProjectModal(projectDetailUrl); }}
+         tabindex="0" 
+         role="button"
+         aria-label={`View details for ${title}`}
+>
+  {/* The card-link-wrapper is no longer an <a> tag if the whole card is clickable for the modal */}
+  <div class="card-visual-content"> {/* Renamed for clarity */}
+    {coverImage && coverImage.url && (
+      <div class="card-image-container">
+        <img src={coverImage.url} alt={coverImage.alt || `Cover image for ${title}`} loading="lazy" />
+      </div>
+    )}
+    <div class="card-content">
+      <h3 class="card-title">{title}</h3>
+      <p class="card-date"><time datetime={publishDate.toISOString()}>{formattedDate}</time></p>
+      <p class="card-description">{description}</p>
+      {tags && tags.length > 0 && (
+        <div class="card-tags">
+          {tags.map(tag => <span class="tag">{tag}</span>)}
+        </div>
+      )}
+    </div>
+  </div>
+  <div class="card-links">
+    {liveLink && <a href={liveLink} target="_blank" rel="noopener noreferrer" class="button" onclick="(e) => e.stopPropagation()">Live Site</a>}
+    {repoLink && <a href={repoLink} target="_blank" rel="noopener noreferrer" class="button" onclick="(e) => e.stopPropagation()">Repository</a>}
+    {videoLink && <a href={videoLink} target="_blank" rel="noopener noreferrer" class="button" onclick="(e) => e.stopPropagation()">Watch Demo</a>}
+    {/* Fallback link to detail page for no-JS or right-click/open in new tab */}
+    <a href={projectDetailUrl} class="button secondary" onclick="(e) => e.stopPropagation()" aria-label={`View full page for ${title}`}>Details Page</a>
+  </div>
+</article>
+
+<style>
+  .project-card {
+    background-color: var(--secondary-bg-color);
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden; /* Ensures content respects border-radius */
+    transition: transform 0.2s ease-out, box-shadow 0.2s ease-out;
+    cursor: pointer; /* Indicate it's clickable */
+  }
+
+  .card-visual-content {
+    /* Grouping visual elements if needed, for the main click area */
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
+
+  .project-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 16px rgba(0,0,0,0.1);
+  }
+
+  html.dark .project-card:hover {
+    box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+  }
+
+  .card-link-wrapper {
+    text-decoration: none;
+    color: inherit; /* Inherit color from parent for text inside link */
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1; /* Make the clickable area fill the card above links */
+  }
+
+  .card-image-container {
+    width: 100%;
+    aspect-ratio: 16 / 9; /* Common aspect ratio for hero images */
+    overflow: hidden; /* In case image is slightly off */
+  }
+
+  .card-image-container img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; /* Cover the area, might crop */
+    transition: transform 0.3s ease-out;
+  }
+
+  .project-card:hover .card-image-container img {
+    transform: scale(1.05); /* Subtle zoom on image on card hover */
+  }
+
+  .card-content {
+    padding: 1rem 1.25rem;
+    flex-grow: 1; /* Allows this section to take available space */
+  }
+
+  .card-title {
+    font-size: 1.375rem; /* 22px */
+    margin-top: 0;
+    margin-bottom: 0.25rem;
+    color: var(--text-color);
+  }
+
+  .card-date {
+    font-size: 0.8rem;
+    color: var(--secondary-text-color);
+    margin-bottom: 0.75rem;
+  }
+
+  .card-description {
+    font-size: 0.95rem;
+    line-height: 1.5;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+    /* Limit lines for preview if desired */
+    display: -webkit-box;
+    -webkit-line-clamp: 3; /* Show 3 lines */
+    -webkit-box-orient: vertical;  
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .card-tags {
+    margin-bottom: 1rem;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+  }
+
+  .tag {
+    background-color: var(--bg-color); /* Inverted for contrast */
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+    padding: 0.25rem 0.6rem;
+    border-radius: 16px; /* Pill shape */
+    font-size: 0.75rem;
+    font-weight: 500;
+  }
+  html.dark .tag {
+    background-color: var(--secondary-bg-color); /* Darker background for tags in dark mode */
+  }
+
+
+  .card-links {
+    padding: 0 1.25rem 1.25rem; /* Padding for the links section */
+    display: flex;
+    gap: 0.75rem; /* Space between buttons */
+    flex-wrap: wrap; /* Allow buttons to wrap if many */
+    border-top: 1px solid var(--border-color); /* Separator line */
+    margin-top: auto; /* Pushes links to the bottom if card content is short */
+    padding-top: 1rem;
+  }
+
+  .button {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background-color: var(--accent-color);
+    color: #fff; /* Text color for button */
+    border: 1px solid var(--accent-color);
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    text-align: center;
+    transition: background-color 0.2s ease-out, border-color 0.2s ease-out;
+  }
+
+  .button:hover {
+    background-color: var(--link-hover-color); /* Use the link hover color */
+    border-color: var(--link-hover-color);
+    color: #fff;
+    text-decoration: none;
+  }
+
+  /* Secondary button style for repo/video if desired */
+  .button.secondary {
+    background-color: transparent;
+    color: var(--accent-color);
+    border: 1px solid var(--accent-color);
+  }
+  .button.secondary:hover {
+    background-color: color-mix(in srgb, var(--accent-color) 15%, transparent); /* Slight bg tint on hover */
+    color: var(--accent-color);
+  }
+  .card-links a.button {
+    /* Ensure buttons inside the card don't also trigger the modal if the card itself is the main trigger */
+    /* onclick="(e) => e.stopPropagation()" helps here */
+  }
+</style>

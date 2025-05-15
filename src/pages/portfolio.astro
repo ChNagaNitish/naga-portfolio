@@ -1,0 +1,80 @@
+---
+// src/pages/portfolio.astro
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro'; // Ensure this path is correct
+import ProjectCard from '../components/ProjectCard.astro'; // Ensure this path is correct
+import ProjectModal from '../components/ProjectModal.astro';
+
+// Fetch all portfolio entries and sort them by publishDate descending (newest first)
+const allProjects = (await getCollection('portfolio')).sort(
+  (a, b) => b.data.publishDate.valueOf() - a.data.publishDate.valueOf()
+);
+
+// You can also filter, e.g., to show only featured projects:
+// const featuredProjects = allProjects.filter(project => project.data.featured);
+---
+<BaseLayout 
+  title="My Portfolio"
+  description="A showcase of my recent projects, highlighting my skills and experience in web development, design, and more."
+>
+  <section class="portfolio-hero">
+    <h1>Portfolio Showcase</h1>
+    <p>Welcome to my portfolio. Here you'll find a selection of projects that I've worked on. Each project reflects my interests and the quality of work. Feel free to explore and get in touch!</p>
+  </section>
+
+  <section class="portfolio-grid-section">
+    {allProjects.length > 0 ? (
+      <div class="project-grid">
+        {allProjects.map(project => (
+          <ProjectCard 
+            slug={project.slug}
+            title={project.data.title}
+            description={project.data.description}
+            coverImage={project.data.coverImage}
+            tags={project.data.tags}
+            liveLink={project.data.liveLink}
+            repoLink={project.data.repoLink}
+            videoLink={project.data.videoLink}
+            publishDate={project.data.publishDate}
+          />
+        ))}
+      </div>
+    ) : (
+      <p class="no-projects">Looks like I need to add some projects here soon! Stay tuned.</p>
+    )}
+  </section>
+
+  <style>
+    .portfolio-hero {
+      text-align: center;
+      margin-bottom: 3rem; /* More space after hero */
+    }
+    .portfolio-hero h1 {
+      font-size: 2.75rem; /* Larger hero title */
+      margin-bottom: 0.5em;
+      color: var(--text-color);
+    }
+    .portfolio-hero p {
+      font-size: 1.125rem; /* Slightly larger intro text */
+      color: var(--secondary-text-color); /* Use secondary text for less emphasis */
+      max-width: 700px; /* Constrain line length */
+      margin-left: auto;
+      margin-right: auto;
+    }
+
+    .project-grid {
+      display: grid;
+      /* grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); */
+      grid-template-columns: repeat(auto-fill, minmax(min(100%, 350px), 1fr)); /* Responsive columns */
+      gap: 2rem; /* Increased gap */
+    }
+
+    .no-projects {
+      text-align: center;
+      font-style: italic;
+      color: var(--secondary-text-color);
+      padding: 2rem;
+    }
+  </style>
+  <ProjectModal />
+</BaseLayout>
