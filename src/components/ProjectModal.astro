@@ -161,47 +161,69 @@
   
   /* Basic styles for content within the modal - mirror your [slug].astro styles or ensure they are inherited globally */
   .modal-content :global(article.project-detail) {
-      max-width: 100%; /* Override max-width from the original page if any */
-      padding: 1rem; /* Add some padding inside the scrollable area */
+      max-width: 800px;
+    margin: 0 auto 2rem auto;
+    padding: 0 1rem; /* Add some padding for smaller screens */
+  }
+  .modal-content :global(article.project-detail .project-header) {
+    display: flex; 
+    flex-direction: column; 
+    align-items: center; 
+    text-align: center; 
+    margin-bottom: 2.5rem; 
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    position: static;
   }
   .modal-content :global(article.project-detail h1) {
-    font-size: 2rem;
-    margin-top: 0; /* Remove top margin for first heading in modal */
+    font-size: 2.5rem; /* Adjusted for balance */
+    margin-bottom: 0.5rem; 
     color: var(--text-color);
+    line-height: 1.2;
   }
    .modal-content :global(article.project-detail .publish-date) {
-    font-size: 0.85rem;
+    font-size: 0.9rem; /* Adjusted */
     color: var(--secondary-text-color);
+    margin-top: 0.25rem; 
     margin-bottom: 1rem;
   }
   .modal-content :global(article.project-detail .tags) {
-    margin-bottom: 1.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center; 
+    gap: 0.5rem; 
+    margin-top: 0.25rem; 
   }
   .modal-content :global(article.project-detail .tag-detail) {
     display: inline-block;
     background-color: var(--secondary-bg-color);
-    color: var(--accent-color);
-    border: 1px solid var(--accent-color);
-    padding: 0.25rem 0.6rem;
+    color: var(--accent-color); 
+    border: 1px solid var(--accent-color); 
+    padding: 0.3rem 0.8rem; 
     border-radius: 16px;
-    font-size: 0.75rem;
-    margin-right: 0.4rem;
-    margin-bottom: 0.4rem;
+    font-size: 0.75rem; /* Adjusted */
+    font-weight: 500;
   }
   html.dark .modal-content :global(article.project-detail .tag-detail) {
     background-color: color-mix(in srgb, var(--bg-color) 80%, var(--accent-color));
   }
   .modal-content :global(article.project-detail .project-cover-image) {
-      margin-bottom: 1.5rem;
-      border-radius: 6px;
-      overflow: hidden;
+      margin-bottom: 2rem;
+    border-radius: 8px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
   }
   .modal-content :global(article.project-detail .project-cover-image img) {
       width: 100%;
-      display: block;
+    height: auto;
+    display: block;
   }
   .modal-content :global(article.project-detail .project-meta-links) {
-      margin-bottom: 1.5rem;
+      margin-bottom: 2.5rem;
+    padding: 1.25rem;
+    background-color: var(--secondary-bg-color);
+    border-radius: 8px;
+    border: 1px solid var(--border-color);
   }
   .modal-content :global(article.project-detail .external-links) {
       margin-top: 1rem;
@@ -222,9 +244,10 @@
       font-size: 1.3rem; margin-top: 1.5rem; margin-bottom: 0.5rem;
   }
    .modal-content :global(article.project-detail .project-content img) {
-    max-width: 100%;
-    height: auto;
-    border-radius: 4px;
-    margin: 1rem 0;
+    margin: 1.5rem auto; /* Center block images */
+    border-radius: 6px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    max-width: 100%; /* Already in global, but good to ensure */
+    display: block;
   }
 </style>
