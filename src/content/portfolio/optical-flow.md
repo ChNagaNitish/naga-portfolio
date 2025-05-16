@@ -1,11 +1,11 @@
 ---
 title: "Advancing Multiphase Flow Analysis with AI-Driven Optical Flow Techniques"
 publishDate: 2025-05-15
-description: "Applied RAFT optical flow method with pretrained weights on Cloud Cavitation high speed images to estimate the velocity. To obtain the uncertainty of the optical flow method, synthetic images of cloud cavitation using CFD data are generated."
+description: "This project pioneers the use of the RAFT machine learning algorithm for Optical Flow to analyze cloud cavitation, a damaging multiphase flow phenomenon, by quantifying its velocity field uncertainty with CFD-generated synthetic images to improve understanding and mitigation of cavitation erosion."
 coverImage:
   url: "/images/optical_flow_cover.png" # Place in public/images/portfolio/novaflow/
   alt: "pBox"
-tags: ["Python", "OpenFOAM", "Computational Fluid Dynamics", "Machine Learning", "Computer Vision", "Multiphase"]
+tags: ["Python", "OpenFOAM", "Computational Fluid Dynamics", "Machine Learning", "Computer Vision", "Multiphase", "Uncertainty Quantification"]
 featured: true
 ---
 
