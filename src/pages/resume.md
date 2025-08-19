@@ -5,7 +5,7 @@ description: An overview of my skills and experience.
 ---
 # Naga Nitish Chamala
 
-## Blacksburg, VA 24060 • naga@vt.edu • (248) 212-3516
+## Blacksburg, VA 24060 • naga@vt.edu
 
 Highly motivated researcher with expertise in CFD, multiphase flows, and thermal analysis, demonstrated through advanced numerical simulations, model development, and experimental validation. Proficient in industry-standard software (ANSYS Fluent/CFX/Icepak, OpenFOAM, StarCCM+) and programming languages (C++, Python). Proven ability to optimize designs and improve performance in complex fluid and thermal systems.
 
