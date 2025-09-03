@@ -2,24 +2,13 @@
 // Component Script (JavaScript/TypeScript runs at build time)
 import BaseLayout from '../layouts/BaseLayout.astro';
 const myName = "Naga Nitish Chamala"; // Replace with your name
-const shortIntro = "p";
+const shortIntro = "Highly motivated researcher with expertise in CFD, multiphase flows, and thermal analysis, demonstrated through advanced numerical simulations, model development, and experimental validation. Proficient in industry-standard software (ANSYS Fluent/CFX/Icepak, OpenFOAM, StarCCM+) and programming languages (C++, Python). Proven ability to optimize designs and improve performance in complex fluid and thermal systems.";
 ---
 <BaseLayout title="Welcome">
     <div class="intro-section">
         <div class="intro-text">
             <h1>Hello, I'm {myName}!</h1>
-            <p>As a dedicated Ph.D. Candidate in Aerospace Engineering at Virginia Tech, I specialize in Computational Fluid Dynamics (CFD), multiphase flows, and advanced thermal management. My research is driven by a passion for solving complex fluid and thermal challenges through a combination of high-fidelity numerical simulations, innovative machine learning applications, and rigorous model validation.
-
-My core expertise lies in characterizing and modeling complex phenomena like cloud cavitation. Key achievements from my research include:
--> Pioneering a novel machine learning (RAFT optical flow) application to achieve the first-ever simultaneous velocity measurements of both liquid and vapor phases in cloud cavitation, outperforming traditional algorithms by a factor of 30x.
--> Formulating and validating a new non-dimensional parameter (CaRe) to successfully predict the governing dynamics and material erosion risk of cavitating flows.
--> Conducting comprehensive V&V studies on OpenFOAM solvers to quantify numerical and model form uncertainty, ensuring the reliability of predictive simulations.
-
-Beyond my doctoral research, I have practical experience applying my skills to real-world engineering problems. I have optimized scramjet engine components to increase thrust and efficiency, designed and analyzed high-performance cooling solutions for EV batteries and 3D integrated circuits, and enhanced heat sink performance for electronics.
-
-I am proficient with a wide range of industry-standard software, including ANSYS Fluent/CFX/Icepak, OpenFOAM, and StarCCM+, and I leverage programming languages like C++ and Python to develop custom solutions and analysis tools.
-
-I am always eager to connect with fellow researchers and industry professionals to discuss new ideas, challenges, and opportunities in the fields of aerospace, thermal management, and fluid dynamics. Please feel free to reach out!</p>
+            <p>{shortIntro}</p>
         </div>
         <div class="intro-image-container">
             <img 
