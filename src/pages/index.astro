@@ -31,15 +31,19 @@ const allProjects = (await getCollection('portfolio')).sort(
       href="https://www.linkedin.com/in/naga-nitish-chamala-0b0b31103/"
       target="_blank"
       rel="noopener noreferrer"
-      class="button"
+      class="button-icon"
+      aria-label="LinkedIn Profile"
     >
-      LinkedIn
+      <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+        <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+      </svg>
     </a>
+    
     <a
       href="/resume.pdf"
       target="_blank"
       rel="noopener noreferrer"
-      class="button"
+      class="button button-resume"
     >
       View Resume
     </a>
@@ -80,13 +84,19 @@ const allProjects = (await getCollection('portfolio')).sort(
       display: flex;
       align-items: center;
       gap: 2rem;
-      flex-wrap: wrap; /* Wraps on small screens */
+      flex-wrap: wrap; 
       margin-bottom: 2rem;
     }
     .intro-text {
       flex: 2;
       min-width: 300px;
     }
+    
+    /* NEW: Justified paragraph text */
+    .intro-text p {
+      text-align: justify;
+    }
+    
     .intro-image-container {
       flex: 1;
       display: flex;
@@ -108,8 +118,11 @@ const allProjects = (await getCollection('portfolio')).sort(
       flex-wrap: wrap;
       gap: 1rem;
       justify-content: center;
+      align-items: center; /* Vertically align buttons */
       margin: 2rem 0 3rem 0;
     }
+
+    /* Base style for text buttons */
     .button {
       display: inline-block;
       padding: 0.75rem 1.5rem;
@@ -125,6 +138,40 @@ const allProjects = (await getCollection('portfolio')).sort(
       background-color: var(--link-hover-color);
       border-color: var(--link-hover-color);
       transform: translateY(-2px);
+    }
+    
+    /* NEW: Darker resume button style */
+    .button.button-resume {
+      background-color: var(--link-hover-color); /* Uses hover color as base */
+      border-color: var(--link-hover-color);
+    }
+    .button.button-resume:hover {
+      filter: brightness(90%); /* Makes it even darker on hover */
+      transform: translateY(-2px);
+    }
+
+    /* NEW: LinkedIn icon button style */
+    .button-icon {
+      display: inline-flex;
+      justify-content: center;
+      align-items: center;
+      width: 50px;  /* Set a fixed size */
+      height: 50px; /* Set a fixed size */
+      background-color: var(--accent-color);
+      color: #fff; /* This color is used by the SVG */
+      text-decoration: none;
+      border-radius: 50%; /* Make it circular */
+      border: 1px solid var(--accent-color);
+      transition: all 0.2s ease-out;
+    }
+    .button-icon:hover {
+      background-color: var(--link-hover-color);
+      border-color: var(--link-hover-color);
+      transform: translateY(-2px);
+    }
+    .button-icon svg {
+      width: 24px;
+      height: 24px;
     }
 
     /* Projects */
