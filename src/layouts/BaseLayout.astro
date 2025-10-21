@@ -39,37 +39,6 @@ const currentPath = Astro.url.pathname; // Gets the current page's path, e.g., "
 </head>
 <body>
     <header>
-        /*<nav>
-            {navLinks.map(link => {
-                let isActive = false;
-                if (link.href === "/") {
-                    // Home is active only if the current path is exactly "/"
-                    isActive = currentPath === "/";
-                } else {
-                    // For other links (e.g., "/resume/", "/portfolio/"),
-                    // it's active if the current path starts with the link's href.
-                    // This makes "/portfolio/" active for both "/portfolio/" and "/portfolio/project-slug/".
-                    // Ensure consistent trailing slashes for comparison if your links always end with one.
-                    const linkHrefWithTrailingSlash = link.href.endsWith('/') ? link.href : link.href + '/';
-                    const currentPathWithTrailingSlashIfNeeded = currentPath.endsWith('/') || currentPath === "/" ? currentPath : currentPath + '/';
-                    
-                    if (link.href === "/") { // Re-check for home for exact match
-                        isActive = currentPathWithTrailingSlashIfNeeded === linkHrefWithTrailingSlash;
-                    } else {
-                        isActive = currentPathWithTrailingSlashIfNeeded.startsWith(linkHrefWithTrailingSlash);
-                    }
-                }
-                return (
-                    <a 
-                        href={link.href} 
-                        class:list={[{ active: isActive }, "nav-link"]}
-                        aria-current={isActive ? "page" : false} {/* Important for accessibility */}
-                    >
-                        {link.label}
-                    </a>
-                );
-            })}
-        </nav>*/
         <ThemeToggle /> {/* Place the theme toggle component */}
     </header>
 
