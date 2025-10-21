@@ -64,7 +64,7 @@ const isoDate = publishDate ? new Date(publishDate).toISOString() : '';
     {/* --- Project Header --- */}
     <header class="project-header">
       <h1>{title}</h1>
-      <p class="publish-date"><time datetime={isoDate}>{formattedDate}</time></p>
+      //<p class="publish-date"><time datetime={isoDate}>{formattedDate}</time></p>
       {tags && tags.length > 0 && (
         <div class="tags">
           {tags.map(tag => <span class="tag-detail">{tag}</span>)}
