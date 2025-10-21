@@ -12,13 +12,13 @@ const { title, description = "Naga Nitish Chamala - Personal Portfolio" } = Astr
 const siteName = "naganitish.com";
 
 // Define your navigation links here for easier management
-const navLinks = [
+/*const navLinks = [
   { href: "/", label: "Home" },
   { href: "/resume/", label: "Resume" },
   { href: "/portfolio/", label: "Portfolio" },
   // Add more links as your site grows
   // { href: "/contact/", label: "Contact" },
-];
+];*/
 
 const currentPath = Astro.url.pathname; // Gets the current page's path, e.g., "/", "/resume/", "/portfolio/project-name/"
 ---
@@ -39,7 +39,7 @@ const currentPath = Astro.url.pathname; // Gets the current page's path, e.g., "
 </head>
 <body>
     <header>
-        <nav>
+        /*<nav>
             {navLinks.map(link => {
                 let isActive = false;
                 if (link.href === "/") {
@@ -69,7 +69,7 @@ const currentPath = Astro.url.pathname; // Gets the current page's path, e.g., "
                     </a>
                 );
             })}
-        </nav>
+        </nav>*/
         <ThemeToggle /> {/* Place the theme toggle component */}
     </header>
 
