@@ -1,78 +1,58 @@
 ---
 // src/layouts/BaseLayout.astro
-import '../styles/global.css'; // Import global styles
-import ThemeToggle from '../components/ThemeToggle.astro'; // Import the theme toggle component
+// This is a fresh, clean layout file.
+import '../styles/global.css';
+import ThemeToggle from '../components/ThemeToggle.astro';
 
+// We ONLY define the props we absolutely need.
 export interface Props {
-    title: string;
-    description?: string;
+  title: string;
+  description?: string;
 }
 
 const { title, description = "Naga Nitish Chamala - Personal Portfolio" } = Astro.props;
 const siteName = "naganitish.com";
-
-
-
-const currentPath = Astro.url.pathname; // Gets the current page's path, e.g., "/", "/resume/", "/portfolio/project-name/"
 ---
 <!doctype html>
-<html lang="en"> {/* The .dark class will be added/removed here by ThemeToggle.astro script */}
+<html lang="en">
 <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="generator" content={Astro.generator} />
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    
-    <title>{title} | {siteName}</title>
-    <meta name="description" content={description} />
-
-    {/* Open Graph / Social Media Meta Tags (Optional) */}
-    <meta property="og:title" content={`${title} | ${siteName}`} />
-    <meta property="og:description" content={description} />
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="generator" content={Astro.generator} />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  
+  <title>{title} | {siteName}</title>
+  <meta name="description" content={description} />
 </head>
 <body>
-    <header>
-        <ThemeToggle /> {/* Place the theme toggle component */}
-    </header>
+  
+  <header class="site-header">
+    <a href="/" class="site-title">{siteName}</a>
+    <ThemeToggle />
+  </header>
 
-    <main>
-        <slot /> {/* Page content will be injected here */}
-    </main>
+  <main>
+    <slot /> </main>
 
-    <footer>
-        <p>&copy; {new Date().getFullYear()} {siteName}. All rights reserved.</p>
-    </footer>
-
-    {/* Styles for the active navigation link can go here or in global.css */}
-    <style>
-        header nav a.nav-link {
-            padding: 0.5rem 0; /* Add some padding for the ::after element */
-            position: relative; /* Needed for the ::after pseudo-element */
-            text-decoration: none;
-            color: var(--text-color); /* Ensure it uses themed text color */
-            transition: color 0.2s ease-in-out;
-        }
-
-        header nav a.nav-link:hover {
-            color: var(--accent-color);
-        }
-
-        header nav a.nav-link.active {
-            color: var(--accent-color);
-            font-weight: 600; /* Make active link bolder */
-        }
-
-        /* Underline effect for active link */
-        header nav a.nav-link.active::after {
-            content: '';
-            position: absolute;
-            bottom: -2px; /* Position the underline just below the text */
-            left: 0;
-            width: 100%;
-            height: 2px; /* Thickness of the underline */
-            background-color: var(--accent-color);
-            border-radius: 1px; /* Slightly rounded ends for the underline */
-        }
-    </style>
+  <footer>
+    <p>&copy; {new Date().getFullYear()} {siteName}. All rights reserved.</p>
+  </footer>
+  
+  <style>
+    /* Add some basic layout styling for the new header */
+    .site-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1rem 2rem;
+      border-bottom: 1px solid var(--border-color);
+      margin-bottom: 2rem;
+    }
+    .site-title {
+      font-weight: bold;
+      text-decoration: none;
+      color: var(--text-color);
+    }
+  </style>
 </body>
 </html>
