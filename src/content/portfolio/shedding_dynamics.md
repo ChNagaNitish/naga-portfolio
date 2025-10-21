@@ -6,6 +6,6 @@ coverImage:
   url: "/images/care.png" # Place in public/images/portfolio/novaflow/
   alt: "pBox"
 tags: ["Python", "Multiphase", "Experiment"]
-featured: false
+featured: true
 ---
 
