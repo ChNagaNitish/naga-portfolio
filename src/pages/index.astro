@@ -12,46 +12,47 @@ const allProjects = (await getCollection('portfolio')).sort(
 ---
 <BaseLayout title="Home" description="Personal portfolio for Naga Nitish Chamala, researcher in CFD, multiphase flows, and thermal analysis.">
   
-  <div class="intro-background-box"> {/* NEW: Wrapper for the background box */}
+  <div class="intro-background-box">
     <div class="intro-section">
+      
       <div class="intro-text">
-        <h1>Hello, I'm <span class="highlight-name">{myName}</span>!</h1> {/* NEW: Span for name styling */}
+        <h1>Hello, I'm <span class="highlight-name">{myName}</span>!</h1>
         <p>Highly motivated researcher with expertise in CFD, multiphase flows, and thermal analysis, demonstrated through advanced numerical simulations, model development, and experimental validation. Proficient in industry-standard software (Fluent/CFX/Icepak, OpenFOAM, StarCCM+) and programming languages (C++, Python). Proven ability to improve performance in complex fluid and thermal systems.</p>
       </div>
+      
       <div class="intro-image-container">
         <img
           src="/images/naga_photo.jpg"
           alt="A picture of {myName}"
           class="profile-picture"
         />
+        
+        <div class="button-container">
+          <a
+            href="https://www.linkedin.com/in/naga-nitish-chamala-0b0b31103/"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="button-icon linkedin-button"
+            aria-label="LinkedIn Profile"
+          >
+            <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
+              <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+            </svg>
+          </a>
+          
+          <a
+            href="/resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="button button-resume"
+          >
+            Resume
+          </a>
+        </div>
       </div>
-    </div>
-
-    <div class="button-container">
-      <a
-        href="https://www.linkedin.com/in/naga-nitish-chamala-0b0b31103/"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="button-icon linkedin-button" {/* NEW: Specific class for LinkedIn color */}
-        aria-label="LinkedIn Profile"
-      >
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="currentColor">
-          <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.784-1.75-1.75s.784-1.75 1.75-1.75 1.75.784 1.75 1.75-.784 1.75-1.75 1.75zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
-        </svg>
-      </a>
       
-      <a
-        href="/resume.pdf"
-        target="_blank"
-        rel="noopener noreferrer"
-        class="button button-resume"
-      >
-        Resume {/* NEW: Text changed to "Resume" */}
-      </a>
     </div>
-  </div> {/* END: intro-background-box */}
-
-  <section class="portfolio-hero">
+  </div> <section class="portfolio-hero">
     <h2>Portfolio Showcase</h2>
     <p>A selection of projects I've worked on. Click any project to see the details.</p>
   </section>
@@ -81,48 +82,47 @@ const allProjects = (await getCollection('portfolio')).sort(
   <ProjectModal />
 
   <style>
-    /* NEW: Intro Background Box */
+    /* Intro Background Box */
     .intro-background-box {
-      background-color: var(--secondary-bg-color); /* Slightly different background */
-      border-radius: 12px; /* Rounded corners */
-      padding: 3rem 2rem; /* More padding inside the box */
-      margin: 2rem auto; /* Center the box and give it vertical space */
-      max-width: 1000px; /* Limit its width */
-      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow */
+      background-color: var(--secondary-bg-color);
+      border-radius: 12px;
+      padding: 3rem 2rem;
+      margin: 2rem auto;
+      max-width: 1000px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
     }
 
     /* Intro Section */
     .intro-section {
       display: flex;
-      align-items: center; /* Vertically align items */
+      align-items: center;
       gap: 2rem;
       flex-wrap: wrap; 
-      margin-bottom: 2rem; /* Space between text/image and buttons */
     }
     .intro-text {
       flex: 2;
       min-width: 300px;
     }
     
-    /* Justified paragraph text */
     .intro-text p {
       text-align: justify;
-      line-height: 1.7; /* Improve readability */
+      line-height: 1.7;
     }
 
-    /* NEW: Name Highlight */
     .highlight-name {
-      font-size: 1.3em; /* Make it bigger relative to the h1 */
-      color: var(--accent-color); /* Use your accent color */
-      font-weight: 800; /* Make it stand out more */
-      display: inline-block; /* Helps with line breaks */
+      font-size: 1.3em;
+      color: var(--accent-color);
+      font-weight: 800;
+      display: inline-block;
     }
     
+    /* MODIFIED: Image container */
     .intro-image-container {
       flex: 1;
       display: flex;
-      justify-content: center; /* Center horizontally */
-      align-items: center;   /* Center vertically within its container */
+      flex-direction: column; /* Stack image and buttons vertically */
+      justify-content: center;
+      align-items: center;
       min-width: 200px;
     }
     .profile-picture {
@@ -130,18 +130,18 @@ const allProjects = (await getCollection('portfolio')).sort(
       height: 200px;
       object-fit: cover;
       border-radius: 50%;
-      border: 3px solid var(--accent-color); /* Changed border color for contrast */
-      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* Slightly stronger shadow */
+      border: 3px solid var(--accent-color);
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
     }
     
-    /* Buttons */
+    /* MODIFIED: Button container */
     .button-container {
       display: flex;
       flex-wrap: wrap;
-      gap: 1.5rem; /* Increased gap between buttons */
+      gap: 1.5rem;
       justify-content: center;
       align-items: center; 
-      margin-top: 2rem; /* Pushes buttons down from intro text */
+      margin-top: 1.5rem; /* Space between picture and buttons */
     }
 
     /* Base style for text buttons */
@@ -155,7 +155,7 @@ const allProjects = (await getCollection('portfolio')).sort(
       font-weight: 600;
       border: 1px solid var(--accent-color);
       transition: all 0.2s ease-out;
-      white-space: nowrap; /* Prevent text from wrapping */
+      white-space: nowrap;
     }
     .button:hover {
       background-color: var(--link-hover-color);
@@ -165,11 +165,11 @@ const allProjects = (await getCollection('portfolio')).sort(
     
     /* Darker resume button style */
     .button.button-resume {
-      background-color: var(--link-hover-color); /* Uses hover color as base */
+      background-color: var(--link-hover-color);
       border-color: var(--link-hover-color);
     }
     .button.button-resume:hover {
-      filter: brightness(90%); /* Makes it even darker on hover */
+      filter: brightness(90%);
       transform: translateY(-2px);
     }
 
@@ -180,15 +180,79 @@ const allProjects = (await getCollection('portfolio')).sort(
       align-items: center;
       width: 50px;  
       height: 50px; 
-      background-color: var(--accent-color);
       color: #fff; 
       text-decoration: none;
       border-radius: 50%; 
-      border: 1px solid var(--accent-color);
       transition: all 0.2s ease-out;
     }
     .button-icon:hover {
-      background-color: var(--link-hover-color);
-      border-color: var(--link-hover-color);
       transform: translateY(-2px);
     }
+    .button-icon svg {
+      width: 24px;
+      height: 24px;
+    }
+
+    .button-icon.linkedin-button {
+      background-color: #0077B5;
+      border: 1px solid #0077B5;
+    }
+    .button-icon.linkedin-button:hover {
+      background-color: #005a8f;
+      border-color: #005a8f;
+    }
+
+    /* Responsive adjustments for the intro section */
+    @media (max-width: 768px) {
+      .intro-section {
+        flex-direction: column;
+        text-align: center;
+      }
+      .intro-image-container {
+        order: -1;
+        margin-bottom: 1.5rem;
+      }
+      .intro-text p {
+        text-align: left;
+      }
+    }
+
+    /* Projects */
+    .portfolio-hero {
+      text-align: center;
+      margin: 4rem 0 3rem 0;
+    }
+    .portfolio-hero h2 {
+      font-size: 2.5rem;
+      margin-bottom: 0.5em;
+    }
+    .portfolio-hero p {
+      font-size: 1.125rem;
+      color: var(--secondary-text-color);
+      max-width: 700px;
+      margin-left: auto;
+      margin-right: auto;
+    }
+    
+    /* MODIFIED: Project Grid */
+    .project-grid {
+      display: grid;
+      grid-template-columns: 1fr; /* 1 column by default on mobile */
+      gap: 2rem;
+    }
+
+    /* At 768px and wider, switch to 2 columns */
+    @media (min-width: 768px) {
+      .project-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
+    }
+    
+    .no-projects {
+      text-align: center;
+      font-style: italic;
+      color: var(--secondary-text-color);
+      padding: 2rem;
+    }
+  </style>
+</BaseLayout>
